@@ -3,32 +3,34 @@
   width: 100%;
   max-width: 100%;
   margin-bottom: 1rem;
-  border: 1px solid #dee2e6;
+  border-top: 1px solid #dee2e6;
   background-color: #fff;
+  
 }
 
 .calendar-table thead th {
   vertical-align: bottom;
-  border-bottom: 2px solid #dee2e6;
-  width: 14.2%;
+  /* border-bottom: 2px solid #dee2e6; */ 
+  text-align: center;
+  font-weight: normal;
 }
 
 .calendar-table td,
 .calendar-table th {
-  border: 1px solid #dee2e6;
+  /* border: 1px solid #dee2e6; */
 }
 
 .calendar-table td,
 .calendar-table th {
-  padding: 0.75rem;
+  padding: 0.35rem 0px;
   vertical-align: top;
-  border-top: 1px solid #dee2e6;
+  /* border-top: 1px solid #dee2e6; */
+  transition: all 0.25s;
 }
 
 .calendar-day {
-  height: 12vh;
-  max-height: 12vh;
   cursor: pointer;
+  text-align: center;
 }
 
 .calendar-items-wrapper {
@@ -38,22 +40,83 @@
   max-height: calc(100% - 20px);
 }
 
-.calendar-day.past-date {
-  background-color: rgb(248, 248, 248);
+.calendar-day.not-selected-month-date {
+  color: rgb(187 187 187);
 }
 
-.calendar-day:hover {
-  background-color: rgb(248, 248, 248);
+.calendar-day:hover:not(.selected-day),
+.month-bar .month-change-btns:hover {
+  background-color: #7b68ee59;
 }
 
 .blue-date {
   color: rgb(16, 110, 190);
+  font-weight: bold;
+}
+.selected-day span {
+  color: white;
+
+  transition: all 0.25s;
+  position: relative;
+}
+
+.selected-day {
+  position: relative;
+  background: #7b68ee !important;
+  transition: all 0.25s;
 }
 
 .inrange {
-  background-color: rgb(202 253 255) !important;
+  background-color: #7b68ee6e  !important;
+  transition: all 0.55s; 
+  border:0px !important;
 }
 
 .isRangeDate {
-  background-color: rgb(200 237 238) !important;
+  background-color: #7b68eedb  !important;
 }
+
+.date-time-picker {
+  max-width: 250px; 
+  background-color: white;
+  font-size: 12px;
+  border: 1px solid #dee2e6;
+}
+.month-bar input , .month-bar .dropdown button {
+  border: 0px !important;
+  outline: 0px !important ;
+  white-space: nowrap;
+  padding-right: 10px;
+}
+
+.month-bar .month-change-btns {
+  width: 70px;
+}
+
+.month-bar .year-selector {
+  max-width: 70px;
+  background-color: #F0F0F0;
+  cursor: pointer;
+}
+
+.month-bar .year-selector:focus {
+
+  background-color: white;
+  cursor: auto;
+  border: 1px solid #00000073 !important;
+  border-radius: 3px;
+}
+
+.month-bar .year-selector::-webkit-outer-spin-button,
+.month-bar .year-selector::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.month-bar .year-selector[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+/* /////////////////////////// */
