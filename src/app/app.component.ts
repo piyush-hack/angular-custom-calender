@@ -1,10 +1,13 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
+  HostListener,
   Input,
   OnInit,
   Pipe,
   PipeTransform,
+  ViewChild,
 } from '@angular/core';
 
 export class CalendarDay {
@@ -96,8 +99,23 @@ export class AppComponent implements OnInit {
   selectedDay: CalendarDay;
   selectedYear: number = new Date().getFullYear();
   selectedCalenderRange: CalendarRange;
+  showMonthPicker : boolean = false;
+  showDatePicker : boolean = false;
+ 
 
-  constructor(private cd: ChangeDetectorRef) {}
+  @ViewChild('datePickerInput') datePickerInput: ElementRef;
+
+  
+  // @HostListener('document:click', ['$event'])
+  // onOutsideClick(event: Event) {
+  //   if (!this.datePickerInput.nativeElement.contains(event.target)) {
+  //     console.log("here" ,!this.datePickerInput.nativeElement.contains(event.target) , event.target)
+  //     this.showDatePicker = false;
+  //     this.showMonthPicker = false;
+  //   }
+  // }
+
+  
   ngOnInit(): void {
     if (!this.selectedCalenderRange) {
       this.selectedCalenderRange = new CalendarRange(null, null);
@@ -106,7 +124,22 @@ export class AppComponent implements OnInit {
     this.generateCalendarDays();
   }
 
+  public toggleMonthPicker(){
+    this.showMonthPicker = !this.showMonthPicker
+    
+  }
+
+  public toggleDatePicker(){
+    this.showDatePicker = !this.showDatePicker
+    if(!this.showMonthPicker && this.showMonthPicker){
+      this.showMonthPicker = false;
+    }
+  }
+
   private generateCalendarDays(monthIndex: number = null): void {
+    // we limit our years 
+    this.selectedYear > 3000 ? this.selectedYear = 3000 : this.selectedYear;
+    
     // we reset our calendar
     this.calendar = [];
 
@@ -116,6 +149,7 @@ export class AppComponent implements OnInit {
     day.setMonth(showCalenderFromMonth);
     day.setFullYear(this.selectedYear);
     console.log(this.selectedYear);
+
     // set the dispaly month for UI
     this.displayMonth = this.monthNames[day.getMonth()];
 
@@ -338,5 +372,7 @@ export class AppComponent implements OnInit {
   public setSelectedMonth(monthIndex: number) {
     this.monthIndex = monthIndex;
     this.generateCalendarDays(this.monthIndex);
+    document.getElementById("month-picker-btn").click();
+    // this.toggleMonthPicker();
   }
 }
