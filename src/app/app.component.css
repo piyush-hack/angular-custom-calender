@@ -45,7 +45,8 @@
 }
 
 .calendar-day:hover:not(.selected-day),
-.month-bar .month-change-btns:hover {
+.month-bar .month-change-btns:hover,
+.month-picker .month:hover {
   background-color: #7b68ee59;
 }
 
@@ -89,11 +90,18 @@
   padding-right: 10px;
 }
 
-.month-bar .dropdown .date-picker-dropdown-menu {
+.month-bar .dropdown .dropdown-menu {
   height: 150px;
   overflow: auto;
   width: 105px !important;
   min-width: auto;
+}
+.date-picker-dropdown{
+  margin: 0;
+  padding: 0;
+  max-height: 220px;
+  max-width: 252px;
+  overflow: hidden;
 }
 
 .month-bar .month-change-btns {
@@ -124,29 +132,41 @@
 .month-bar .year-selector[type=number] {
   -moz-appearance: textfield;
 }
-
-.date-picker-dropdown-menu{
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 1000;
-  display: none;
-  float: left;
-  min-width: 160px; 
-  margin: 2px 0 0;
-  font-size: 14px;
-  text-align: left;
-  list-style: none;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ccc; 
-  border-radius: 4px;
-  -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
-  box-shadow: 0 6px 12px rgb(0 0 0 / 18%);
-}
+ 
 
 button{
   outline: none !important;
 }
 
+#month-picker{
+  height: 220px;
+  overflow-y: scroll;
+}
+.month-picker{
+
+  display: flex;
+  flex-wrap: wrap !important;
+  padding-top: 10px;
+}
+
+.month-picker .month{
+  padding: 10px;
+  border-radius: 5px;
+  margin: 2px;
+}
+
+.month-picker .month.selected-month{
+  color: white;
+  font-weight: bold;
+  background-color: #7b68ee !important;
+}
+
 /* /////////////////////////// */
+
+
+.accordian .rd {position: absolute;opacity: 0;z-index: -1;}
+.accordian .tabs {overflow: hidden;}
+.accordian .tab {width: 100%;overflow: hidden;border-bottom: 1px solid #00000024; position: relative; } .accordian .tab-label {  display: flex;  justify-content: space-between;      padding: 8px 9px; font-weight: normal;  cursor: pointer;height: auto; } /* Icon */ .accordian .tab:hover {background: #00000012;  } .accordian .tab::after { position: absolute; content: "\276F";width: 1em;height: 1em;text-align: center;transition: all .35s;  } .accordian .tab-content {  max-height: 0; background: white;  transition: all .35s;} .accordian .tab-close {  display: flex;  justify-content: flex-end;   font-size: 0.75em;  cursor: pointer;}  .accordian .tab:hover {background: #00000012;  }
+.accordian .tab label{ margin-bottom: 0; }  
+.accordian .rd[checked="true"] ~ .tab-label {  background: #00000012;} .accordian .rd[checked="true"]::after {transform: rotate(90deg);  } .accordian .rd[checked="true"] ~ .tab-content {  max-height: 100vh;}
+.accordian .rd:checked ~ .tab-label {  background: #00000012;} .accordian .rd:checked::after {transform: rotate(90deg);  } .accordian .rd:checked ~ .tab-content {  max-height: 100vh;  }
