@@ -1,7 +1,6 @@
 <div #datePickerInput class="dropdown">
   <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" (click)="showDatePicker()"  type="button" >
-  Select Date
-  <span class="caret"></span>
+  {{placeholder || 'Select Date' }}
 </button>
   <div class="date-picker-dropdown dropdown-menu">
     <form>

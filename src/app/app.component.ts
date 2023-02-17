@@ -1,10 +1,10 @@
 import {
-  ChangeDetectorRef,
   Component,
   ElementRef,
-  HostListener,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   Pipe,
   PipeTransform,
   ViewChild,
@@ -78,6 +78,8 @@ export class InCalenderRangePipe implements PipeTransform {
 })
 export class AppComponent implements OnInit {
   @Input() selectCalenderRange: boolean = false;
+  @Input() placeholder: string;
+  @Output() valueChange  = new EventEmitter<CalendarDay | CalendarRange> () 
 
   public calendar: CalendarDay[] = [];
   public monthNames = [
@@ -102,21 +104,28 @@ export class AppComponent implements OnInit {
   selectedCalenderRange: CalendarRange;
   totalDisplayedYears = [];
   scrollTimeout : any;
-  viewDatePicker : boolean = true
+  viewDatePicker : boolean = true;
   @ViewChild('datePickerInput') datePickerInput: ElementRef;
   @ViewChild('monthPickerInput') monthPickerInput: ElementRef;
 
-  // @HostListener('document:click', ['$event'])
-  // onOutsideClick(event: Event) {
-  //   if (!this.datePickerInput.nativeElement.contains(event.target)) {
-  //     console.log("here" ,!this.datePickerInput.nativeElement.contains(event.target) , event.target)
-  //     this.showDatePicker = false;
-  //     this.showMonthPicker = false;
-  //   }
-  // }
-
   constructor(private elementRef: ElementRef) {}
 
+
+  ngOnInit(): void {
+    if (!this.selectedCalenderRange) {
+      this.selectedCalenderRange = new CalendarRange(null, null);
+    }
+    this.totalDisplayedYears = [];
+    for (let i = 0; i < 10; i++) {
+      this.totalDisplayedYears.push(this.selectedYear + i - 5);
+    }
+    
+    
+    this.onParentScroll();
+    this.generateCalendarDays();
+  }
+
+  
   onParentScroll() {
 
     const parentDiv =
@@ -159,20 +168,6 @@ export class AppComponent implements OnInit {
         }
       }
     }
-  }
-
-  ngOnInit(): void {
-    if (!this.selectedCalenderRange) {
-      this.selectedCalenderRange = new CalendarRange(null, null);
-    }
-    this.totalDisplayedYears = [];
-    for (let i = 0; i < 10; i++) {
-      this.totalDisplayedYears.push(this.selectedYear + i - 5);
-    }
-    
-    
-    // this.onParentScroll();
-    this.generateCalendarDays();
   }
 
   public showDatePicker(behave: ScrollBehavior, time: number = 0) {
@@ -320,9 +315,11 @@ export class AppComponent implements OnInit {
     if (this.selectCalenderRange) {
       this.selectedDay = null;
       this.setCalendarRange(selectedDay);
+      this.valueChange.emit(this.selectedCalenderRange);
     } else {
       this.selectedCalenderRange = null;
       this.selectedDay = selectedDay;
+      this.valueChange.emit(this.selectedDay);
     }
   }
 
