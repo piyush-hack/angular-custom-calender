@@ -5,12 +5,11 @@
   margin-bottom: 1rem;
   border-top: 1px solid #dee2e6;
   background-color: #fff;
-  
 }
 
 .calendar-table thead th {
   vertical-align: bottom;
-  /* border-bottom: 2px solid #dee2e6; */ 
+  /* border-bottom: 2px solid #dee2e6; */
   text-align: center;
   font-weight: normal;
 }
@@ -68,22 +67,23 @@
 }
 
 .inrange {
-  background-color: #7b68ee6e  !important;
-  transition: all 0.55s; 
-  border:0px !important;
+  background-color: #7b68ee6e !important;
+  transition: all 0.55s;
+  border: 0px !important;
 }
 
 .isRangeDate {
-  background-color: #7b68eedb  !important;
+  background-color: #7b68eedb !important;
 }
 
 .date-time-picker {
-  max-width: 250px; 
+  max-width: 250px;
   background-color: white;
   font-size: 12px;
   border: 1px solid #dee2e6;
 }
-.month-bar input , .month-bar .dropdown button {
+.month-bar input,
+.month-bar .dropdown button {
   border: 0px !important;
   outline: 0px !important ;
   white-space: nowrap;
@@ -96,7 +96,7 @@
   width: 105px !important;
   min-width: auto;
 }
-.date-picker-dropdown{
+.date-picker-dropdown {
   margin: 0;
   padding: 0;
   max-height: 220px;
@@ -110,12 +110,10 @@
 
 .month-bar .year-selector {
   max-width: 70px;
-  background-color: #F0F0F0;
   cursor: pointer;
 }
 
 .month-bar .year-selector:focus {
-
   background-color: white;
   cursor: auto;
   border: 1px solid #00000073 !important;
@@ -129,33 +127,32 @@
 }
 
 /* Firefox */
-.month-bar .year-selector[type=number] {
+.month-bar .year-selector[type='number'] {
   -moz-appearance: textfield;
 }
- 
 
-button{
+button {
   outline: none !important;
 }
 
-#month-picker{
+#month-picker {
   height: 220px;
   overflow-y: scroll;
 }
-.month-picker{
-
+.month-picker {
   display: flex;
   flex-wrap: wrap !important;
   padding-top: 10px;
 }
 
-.month-picker .month{
-  padding: 10px;
+.month-picker .month {
+  padding: 8px;
   border-radius: 5px;
   margin: 2px;
+  font-size: 12px;
 }
 
-.month-picker .month.selected-month{
+.month-picker .month.selected-month {
   color: white;
   font-weight: bold;
   background-color: #7b68ee !important;
@@ -163,10 +160,75 @@ button{
 
 /* /////////////////////////// */
 
+.accordian .rd {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+.accordian .tabs {
+  overflow: hidden;
+}
+.accordian .tab {
+  width: 100%;
+  overflow: hidden;
+  border-bottom: 1px solid #00000024;
+  position: relative;
+}
+.accordian .tab-label {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 9px;
+  font-weight: normal;
+  cursor: pointer;
+  height: auto;
+  font-size: 12px;
+  transition: all 0.35s;
 
-.accordian .rd {position: absolute;opacity: 0;z-index: -1;}
-.accordian .tabs {overflow: hidden;}
-.accordian .tab {width: 100%;overflow: hidden;border-bottom: 1px solid #00000024; position: relative; } .accordian .tab-label {  display: flex;  justify-content: space-between;      padding: 8px 9px; font-weight: normal;  cursor: pointer;height: auto; } /* Icon */ .accordian .tab:hover {background: #00000012;  } .accordian .tab::after { position: absolute; content: "\276F";width: 1em;height: 1em;text-align: center;transition: all .35s;  } .accordian .tab-content {  max-height: 0; background: white;  transition: all .35s;} .accordian .tab-close {  display: flex;  justify-content: flex-end;   font-size: 0.75em;  cursor: pointer;}  .accordian .tab:hover {background: #00000012;  }
-.accordian .tab label{ margin-bottom: 0; }  
-.accordian .rd[checked="true"] ~ .tab-label {  background: #00000012;} .accordian .rd[checked="true"]::after {transform: rotate(90deg);  } .accordian .rd[checked="true"] ~ .tab-content {  max-height: 100vh;}
-.accordian .rd:checked ~ .tab-label {  background: #00000012;} .accordian .rd:checked::after {transform: rotate(90deg);  } .accordian .rd:checked ~ .tab-content {  max-height: 100vh;  }
+} /* Icon */
+.accordian .tab:hover {
+  background: #00000012;
+}
+.accordian .tab::after {
+  position: absolute;
+  content: '\276F';
+  width: 1em;
+  height: 1em;
+  text-align: center;
+  transition: all 0.35s;
+}
+.accordian .tab-content {
+  max-height: 0;
+  background: white;
+  transition: all 0.35s;
+}
+.accordian .tab-close {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.75em;
+  cursor: pointer;
+}
+.accordian .tab:hover {
+  background: #00000012;
+}
+.accordian .tab label {
+  margin-bottom: 0;
+}
+.accordian .rd[checked='true'] ~ .tab-label {
+  background: #00000012;
+}
+.accordian .rd[checked='true']::after {
+  transform: rotate(90deg);
+}
+.accordian .rd[checked='true'] ~ .tab-content {
+  max-height: 100vh;
+}
+.accordian .rd:checked ~ .tab-label {
+  background: #00000012;
+}
+.accordian .rd:checked::after {
+  transform: rotate(90deg);
+}
+.accordian .rd:checked ~ .tab-content {
+  max-height: 100vh;
+  
+}

@@ -98,13 +98,14 @@ export class AppComponent implements OnInit {
   private monthIndex: number = 0;
   selectedDay: CalendarDay;
   selectedYear: number = new Date().getFullYear();
-  accordianYear: number;;
-  selectedCalenderRange: CalendarRange; 
- 
-
+  accordianYear: number;
+  selectedCalenderRange: CalendarRange;
+  totalDisplayedYears = [];
+  scrollTimeout : any;
+  viewDatePicker : boolean = true
   @ViewChild('datePickerInput') datePickerInput: ElementRef;
+  @ViewChild('monthPickerInput') monthPickerInput: ElementRef;
 
-  
   // @HostListener('document:click', ['$event'])
   // onOutsideClick(event: Event) {
   //   if (!this.datePickerInput.nativeElement.contains(event.target)) {
@@ -114,51 +115,116 @@ export class AppComponent implements OnInit {
   //   }
   // }
 
-  
-  ngOnInit(): void {
+  constructor(private elementRef: ElementRef) {}
+
+  onParentScroll() {
+
+    const parentDiv =
+      this.elementRef.nativeElement.querySelector('#month-picker');
+    const monthPickerStart = this.elementRef.nativeElement.querySelector(
+      '#month-picker-start'
+    );
+
     
+    const monthPickerEnd =
+      this.elementRef.nativeElement.querySelector('#month-picker-end');
+    const monthPickerStartTop = monthPickerStart.offsetTop;
+    const parentScrollTop = parentDiv.scrollTop;
+    if (monthPickerStartTop + 20 >= parentScrollTop) {
+      if (this.totalDisplayedYears?.length > 0) {
+        let newTotalDisplayedYears = this.totalDisplayedYears;
+        for (let i = 0; i < 10; i++) {
+          let firstDisplayedyear = newTotalDisplayedYears[0] - 1;
+          newTotalDisplayedYears.unshift(firstDisplayedyear);
+        }
+
+        this.totalDisplayedYears = newTotalDisplayedYears;
+      }
+    } else {
+      const monthPickerEndBottom =
+        monthPickerEnd.offsetTop + monthPickerEnd.offsetHeight;
+      const parentBottom = parentDiv.offsetTop + parentDiv.offsetHeight;
+      const parentScrollBottom = parentDiv.scrollTop + parentDiv.offsetHeight;
+
+      if (
+        monthPickerEndBottom >= parentBottom &&
+        monthPickerEndBottom <= parentScrollBottom
+      ) {
+        if (this.totalDisplayedYears?.length > 0) {
+          for (let i = 0; i < 10; i++) {
+            let lastDisplayedYear =
+              this.totalDisplayedYears[this.totalDisplayedYears.length - 1] + 1;
+            this.totalDisplayedYears.push(lastDisplayedYear);
+          }
+        }
+      }
+    }
+  }
+
+  ngOnInit(): void {
     if (!this.selectedCalenderRange) {
       this.selectedCalenderRange = new CalendarRange(null, null);
-    } 
+    }
+    this.totalDisplayedYears = [];
+    for (let i = 0; i < 10; i++) {
+      this.totalDisplayedYears.push(this.selectedYear + i - 5);
+    }
+    
+    
+    // this.onParentScroll();
     this.generateCalendarDays();
   }
 
-  public showDatePicker(behave : ScrollBehavior , time : number = 0){
-    setTimeout(()=>{
-      document.getElementById("date-time-picker").scrollIntoView({behavior: behave ||  "auto", block: "end", inline: "nearest"});
-    } , time )
+  public showDatePicker(behave: ScrollBehavior, time: number = 0) {
+    this.viewDatePicker = true;
+    setTimeout(() => {
+      document
+        .getElementById('date-time-picker')
+        .scrollIntoView({
+          behavior: behave || 'auto',
+          block: 'end',
+          inline: 'nearest',
+        });
+    }, time);
   }
 
-  public showMonthPicker(){
-    this.showFullYear(this.selectedYear , "auto");
-    setTimeout(()=>{
-      document.getElementById("month-picker").scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+  public showMonthPicker() {
 
-    } , 0 )
+    this.showFullYear(this.selectedYear, 'auto');
+    setTimeout(() => {
+      document
+        .getElementById('month-picker')
+        .scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+          inline: 'nearest',
+        });
+        setTimeout(()=>{
+          this.viewDatePicker = false;
+        } , 400)
+    }, 0);
   }
 
-  public showFullYear(year : number , behave : ScrollBehavior = "smooth"){ 
-    setTimeout(()=>{
-      document.getElementById("tab-year-" + year).scrollIntoView({behavior: behave, block: "end", inline: "nearest"});
-    } , 350 )
+  public showFullYear(year: number, behave: ScrollBehavior = 'smooth') {
+    setTimeout(() => {
+      document
+        .getElementById('tab-year-' + year)
+        .scrollIntoView({ behavior: behave, block: 'end', inline: 'nearest' });
+    }, 350);
   }
-
- 
 
   private generateCalendarDays(monthIndex: number = null): void {
-    // we limit our years 
-    this.selectedYear > 3000 ? this.selectedYear = 3000 : this.selectedYear;
-    
-    this.accordianYear = this.selectedYear
+    // we limit our years
+    this.selectedYear > 3000 ? (this.selectedYear = 3000) : this.selectedYear;
+
+    this.accordianYear = this.selectedYear;
     // we reset our calendar
     this.calendar = [];
-
     // we set the date
     let day: Date = new Date();
     let showCalenderFromMonth = this.getStartMonthForCalender(monthIndex);
     day.setMonth(showCalenderFromMonth);
     day.setFullYear(this.selectedYear);
-    console.log(this.selectedYear);
 
     // set the dispaly month for UI
     this.displayMonth = this.monthNames[day.getMonth()];
@@ -187,10 +253,11 @@ export class AppComponent implements OnInit {
         this.selectedCalenderRange.startDay &&
         this.selectedCalenderRange.startDay.date.getMonth()
       : null;
-      this.monthIndex = monthIndex ??
+    this.monthIndex =
+      monthIndex ??
       userSelectedDay ??
       userSelectedRange ??
-      new Date().getMonth()
+      new Date().getMonth();
     return this.monthIndex;
   }
 
@@ -240,7 +307,7 @@ export class AppComponent implements OnInit {
 
   public setCurrentMonth() {
     this.monthIndex = new Date().getMonth();
-    this.selectedYear = new Date().getFullYear(); 
+    this.selectedYear = new Date().getFullYear();
     this.generateCalendarDays(this.monthIndex);
   }
 
@@ -249,13 +316,7 @@ export class AppComponent implements OnInit {
     this.selectedCalenderRange = null;
   }
 
-  public selectDate(selectedDay: CalendarDay) { 
-    if (!selectedDay.selectedMonthDate) {
-      this.monthIndex = selectedDay.date.getMonth();
-      this.selectedYear = selectedDay.date.getFullYear();
-      this.generateCalendarDays(this.monthIndex);
-    }
- 
+  public selectDate(selectedDay: CalendarDay) {
     if (this.selectCalenderRange) {
       this.selectedDay = null;
       this.setCalendarRange(selectedDay);
@@ -374,14 +435,10 @@ export class AppComponent implements OnInit {
     );
   }
 
-  private compareDates(d: Date, e: Date) {
-    d.setHours(0, 0, 0, 0) < e.setHours(0, 0, 0, 0);
-  }
- 
-  public setSelectedYearMonth(monthIndex : number , year :number ){
+  public setSelectedYearMonth(monthIndex: number, year: number) {
     this.monthIndex = monthIndex;
     this.selectedYear = year;
-    this.generateCalendarDays(this.monthIndex); 
-    this.showDatePicker("smooth");
+    this.generateCalendarDays(this.monthIndex);
+    this.showDatePicker('smooth');
   }
 }
