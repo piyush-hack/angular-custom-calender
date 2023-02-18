@@ -10,6 +10,16 @@ import {
   ViewChild,
 } from '@angular/core';
 
+export enum PickerType {
+  DATE_PICKER = 'DATE_PICKER',
+  TIME_PICKER = 'TIME_PICKER',
+}
+
+export enum Meridiem {
+  AM = 'AM',
+  PM = 'PM',
+}
+
 export class CalendarDay {
   public date: Date;
   public title: string;
@@ -24,6 +34,18 @@ export class CalendarDay {
     this.date = d;
     this.selectedMonthDate = selectedMonthDate || false;
     this.isToday = d.setHours(0, 0, 0, 0) == new Date().setHours(0, 0, 0, 0);
+  }
+}
+
+export class CalendarTime {
+  public hour: number;
+  public minute: number;
+  public meridiem: Meridiem;
+
+  constructor(hour: number, minute: number, meridiem: Meridiem) {
+    this.hour = hour;
+    this.minute = minute;
+    this.meridiem = meridiem;
   }
 }
 
@@ -79,7 +101,12 @@ export class InCalenderRangePipe implements PipeTransform {
 export class AppComponent implements OnInit {
   @Input() selectCalenderRange: boolean = false;
   @Input() placeholder: string;
-  @Output() valueChange  = new EventEmitter<CalendarDay | CalendarRange> () 
+  @Input() calenderPickerType: PickerType = PickerType.DATE_PICKER;
+  @Input() selectedDay: CalendarDay;
+  @Input() selectedCalenderRange: CalendarRange;
+  @Input() selectedTime: CalendarTime = new CalendarTime(12 , 34 , Meridiem.AM);
+  
+  @Output() valueChange = new EventEmitter<CalendarDay | CalendarRange | CalendarTime>();
 
   public calendar: CalendarDay[] = [];
   public monthNames = [
@@ -98,20 +125,31 @@ export class AppComponent implements OnInit {
   ];
   public displayMonth: string;
   private monthIndex: number = 0;
-  selectedDay: CalendarDay;
+
   selectedYear: number = new Date().getFullYear();
-  accordianYear: number;
-  selectedCalenderRange: CalendarRange;
+  accordianYear: number; 
   totalDisplayedYears = [];
-  scrollTimeout : any;
-  viewDatePicker : boolean = true;
+  scrollTimeout: any;
+  viewDatePicker: boolean = true;
+  pickerType = PickerType;
+  meridiem = Meridiem;
+  hourArray: number[] = [];
+  minuteArray: number[] = [];
+
   @ViewChild('datePickerInput') datePickerInput: ElementRef;
   @ViewChild('monthPickerInput') monthPickerInput: ElementRef;
 
   constructor(private elementRef: ElementRef) {}
 
-
   ngOnInit(): void {
+    if (this.calenderPickerType === PickerType.DATE_PICKER) {
+      this.initializeDateRangePicker();
+    } else {
+      this.initializeTimePicker();
+    }
+  }
+
+  private initializeDateRangePicker() {
     if (!this.selectedCalenderRange) {
       this.selectedCalenderRange = new CalendarRange(null, null);
     }
@@ -119,22 +157,60 @@ export class AppComponent implements OnInit {
     for (let i = 0; i < 10; i++) {
       this.totalDisplayedYears.push(this.selectedYear + i - 5);
     }
-    
-    
-    this.onParentScroll();
+
+    this.showDatePicker();
+    // this.onParentScroll();
     this.generateCalendarDays();
   }
 
-  
-  onParentScroll() {
+  private initializeTimePicker (){
+    for (let i = 1; i <= 12; i++) {
+      this.hourArray.push(i);
+    }
 
+    for (let i = 0; i <= 60; i++) {
+      this.minuteArray.push(i);
+    }
+
+    if (!this.selectedTime) {
+      const now = new Date();
+      const timeOptions: Intl.DateTimeFormatOptions = {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      };
+      const timeString: string = now.toLocaleString('en-US', timeOptions);
+
+      let [time, amPmStr] = timeString.split(' ');
+      const [hoursStr, minutesStr] = time.split(':');
+
+      const amPm : Meridiem = amPmStr as Meridiem;
+      const hours = parseInt(hoursStr);
+      const minutes = parseInt(minutesStr);
+
+      this.selectedTime = new CalendarTime(hours, minutes, amPm);
+      console.log(this.selectedTime);
+ 
+      
+    }
+    setTimeout(() => {
+      this.elementRef.nativeElement
+      .querySelectorAll('.selected-time').forEach((selectedTime)=>{
+          let timePickerCover = selectedTime.parentElement;
+          console.log(selectedTime)
+          selectedTime.scrollIntoView(); 
+          timePickerCover.scrollBy(0 , selectedTime.getBoundingClientRect().top - selectedTime.getBoundingClientRect().top - 4)
+        })
+    }, 0);
+  }
+
+  public onParentScroll() {
     const parentDiv =
       this.elementRef.nativeElement.querySelector('#month-picker');
     const monthPickerStart = this.elementRef.nativeElement.querySelector(
       '#month-picker-start'
     );
 
-    
     const monthPickerEnd =
       this.elementRef.nativeElement.querySelector('#month-picker-end');
     const monthPickerStartTop = monthPickerStart.offsetTop;
@@ -170,33 +246,28 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public showDatePicker(behave: ScrollBehavior, time: number = 0) {
+  public showDatePicker(behave: ScrollBehavior = 'auto', time: number = 0) {
     this.viewDatePicker = true;
     setTimeout(() => {
-      document
-        .getElementById('date-time-picker')
-        .scrollIntoView({
-          behavior: behave || 'auto',
-          block: 'end',
-          inline: 'nearest',
-        });
+      document.getElementById('date-picker').scrollIntoView({
+        behavior: behave || 'auto',
+        block: 'end',
+        inline: 'nearest',
+      });
     }, time);
   }
 
   public showMonthPicker() {
-
     this.showFullYear(this.selectedYear, 'auto');
     setTimeout(() => {
-      document
-        .getElementById('month-picker')
-        .scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-          inline: 'nearest',
-        });
-        setTimeout(()=>{
-          this.viewDatePicker = false;
-        } , 400)
+      document.getElementById('month-picker').scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      });
+      setTimeout(() => {
+        this.viewDatePicker = false;
+      }, 400);
     }, 0);
   }
 
@@ -277,12 +348,12 @@ export class AppComponent implements OnInit {
   }
 
   public increaseMonth() {
-    this.monthIndex++;
+    this.monthIndex++; 
     this.onMonthIndexIncDec();
     this.generateCalendarDays(this.monthIndex);
   }
 
-  public decreaseMonth() {
+  public decreaseMonth() { 
     this.monthIndex--;
     this.onMonthIndexIncDec();
     this.generateCalendarDays(this.monthIndex);
@@ -437,5 +508,19 @@ export class AppComponent implements OnInit {
     this.selectedYear = year;
     this.generateCalendarDays(this.monthIndex);
     this.showDatePicker('smooth');
+  }
+
+  public selectHour(hour: number) {
+    this.selectedTime.hour = hour;
+    this.valueChange.emit(this.selectedTime);
+  }
+  public selectMinute(minute: number) {
+    this.selectedTime.minute = minute;
+    this.valueChange.emit(this.selectedTime);
+  }
+  public selectMeridiem(meridiem: Meridiem) {
+    this.selectedTime.meridiem = meridiem ;
+    this.valueChange.emit(this.selectedTime);
+
   }
 }

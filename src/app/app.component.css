@@ -45,7 +45,7 @@
 
 .calendar-day:hover:not(.selected-day),
 .month-bar .month-change-btns:hover,
-.month-picker .month:hover {
+.month-picker .month:hover, .time-picker-col > div:hover {
   background-color: #7b68ee59;
 }
 
@@ -76,7 +76,7 @@
   background-color: #7b68eedb !important;
 }
 
-.date-time-picker {
+.date-picker {
   max-width: 250px;
   background-color: white;
   font-size: 12px;
@@ -102,6 +102,50 @@
   max-height: 220px;
   max-width: 252px;
   overflow: hidden;
+}
+.time-picker-dropdown{
+  margin: 0;
+  padding: 0;
+  max-height: 200px;
+  max-width: 252px;
+  min-width : 0px;
+  overflow : hidden;
+}
+
+.time-picker-dropdown::-webkit-scrollbar , .time-picker-col::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.time-picker-dropdown , .time-picker-col {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.time-picker-col{
+  padding: 4px;
+  max-height: 200px;
+  overflow-y: auto ;
+}
+
+
+
+
+.time-picker-col > div{
+  padding: 7px 14px;
+  margin-bottom: 3px;
+  border-radius: 2px !important;
+  transition: all 0.35s;
+}
+
+.time-picker-col:hover{
+
+}
+
+.time-picker-col > div.selected-time{
+  background-color: #7b68ee !important;
+  color: white !important;
+  font-weight: bold !important;
 }
 
 .month-bar .month-change-btns {

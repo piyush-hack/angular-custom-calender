@@ -1,8 +1,8 @@
-<div #datePickerInput class="dropdown">
+<div #datePickerInput *ngIf="calenderPickerType === pickerType.DATE_PICKER"  class="dropdown">
   <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" (click)="showDatePicker()"  type="button" >
   {{placeholder || 'Select Date' }}
 </button>
-  <div class="date-picker-dropdown dropdown-menu">
+  <div class="date-picker-dropdown dropdown-menu d-block">
     <form>
       <div   id="month-picker" (scroll)="onParentScroll()" >
         <div >
@@ -27,7 +27,7 @@
 				</div>
         </div>
       </div>
-      <div id="date-time-picker"  class="date-time-picker">
+      <div id="date-picker"  class="date-picker">
         <ng-container *ngIf="viewDatePicker">
           <div>
             <div>
@@ -88,6 +88,32 @@
             <a type="button" class="fs12" (click)="setCurrentMonth()">Today</a>
           </div>
         </ng-container>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div #timePickerInput *ngIf="calenderPickerType === pickerType.TIME_PICKER"  class="dropdown">
+  <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" type="button" >
+  {{placeholder || 'Select Time' }}
+</button>
+  <div class="time-picker-dropdown dropdown-menu d-block pt10">
+    <form>
+      <div class="d-flex a-flex-start time-picker-dropdown-flex">
+
+        <div class="time-picker-col" >
+          <div *ngFor="let hour of hourArray " (click)="selectHour(hour)" [class.selected-time]="selectedTime.hour === hour " >{{ hour < 10 ? '0' + hour : hour  }}</div>  
+        </div>
+
+        <div class="time-picker-col" >
+          <div *ngFor="let minute of minuteArray " (click)="selectMinute(minute)"  [class.selected-time]="selectedTime.minute ===  minute " >{{ minute < 10 ? '0' + minute : minute  }}</div>  
+        </div>
+
+        <div class="time-picker-col"  >
+          <div  [class.selected-time]="selectedTime.meridiem === 'AM' " (click)="selectMeridiem(meridiem.AM)" >{{meridiem.AM}}</div>  
+          <div [class.selected-time]="selectedTime.meridiem === 'PM' " (click)="selectMeridiem(meridiem.PM)" >{{meridiem.PM}}</div>    
+        </div>
+
       </div>
     </form>
   </div>
