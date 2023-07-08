@@ -1,0 +1,36 @@
+<button class="time-picker-dropdown bg-crm-transparent b-none" (focusout)="onValueChange()" (keydown.enter)="onValueChange()">
+    <form>
+        <div class="d-flex a-flex-start time-picker-dropdown-flex">
+
+            <div class="time-picker-col" id="hour_row">
+                <div *ngFor="let hour of hourArray " id="hour_{{hour}}" (click)="selectHour(hour)"
+                    [class.selected-time]="selectedTime.hour === (hour) ">
+                    {{ hour }}
+                </div>
+            </div>
+
+            <div class="time-picker-col" id="minute_row">
+                <div *ngFor="let minute of minuteArray " id="minute_{{minute}}" (click)="selectMinute(minute)"
+                    [class.selected-time]="selectedTime.minute ===  (minute) ">
+                    {{ minute }}
+                </div>
+            </div>
+
+            <div class="time-picker-col" id="second_row" *ngIf="showSeconds">
+                <div *ngFor="let second of minuteArray " id="second_{{second}}" (click)="selectSecond(second)"
+                    [class.selected-time]="selectedTime.second ===  (second) ">
+                    {{ second }}
+                </div>
+            </div>
+
+            <div class="time-picker-col" *ngIf="showMeridiem">
+                <div [class.selected-time]="selectedTime.meridiem === 'AM' " (click)="selectMeridiem(meridiem.AM)">
+                    {{meridiem.AM}}
+                </div>
+                <div [class.selected-time]="selectedTime.meridiem === 'PM' " (click)="selectMeridiem(meridiem.PM)">
+                    {{meridiem.PM}}
+                </div>
+            </div>
+        </div>
+    </form>
+</button>
