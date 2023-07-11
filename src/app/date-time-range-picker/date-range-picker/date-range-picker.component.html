@@ -1,0 +1,96 @@
+<div class="date-picker-dropdown " id="date-range-picker">
+    <form>
+        <div id="month-picker" *ngIf="viewMonthPicker" (scroll)="onMonthPickerScroll()">
+            <div>
+                <div class="col accordian">
+                    <div class="tabs">
+                        <div id="month-picker-start"></div>
+
+                        <div class="tab" id="tab-year-{{year}}" *ngFor="let year of totalDisplayedYears">
+
+                            <input type="radio" id="rd{{year}}" value="{{year}}"
+                                attr.checked="{{year == accordianYear}}" [(ngModel)]="accordianYear" class="rd"
+                                name="rd{{year}}">
+                            <label class="tab-label" for="rd{{year}}">{{year}}</label>
+                            <div class="tab-content">
+                                <div class=" month-picker">
+                                    <span class="text-center cp month  " *ngFor="let month of monthNames; let i = index"
+                                        [class.selected-month]="i == monthIndex && year == selectedYear "
+                                        (click)="setSelectedYearMonth(i , year)">
+                                        {{ month | slice:0:3 }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="month-picker-end"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="date-picker" class="date-picker">
+            <ng-container *ngIf="viewDatePicker">
+                <div>
+                    <div>
+                        <div class="d-flex month-bar">
+                            <span class="month-change-btns" (click)="decreaseMonth()">
+                                <i class="icon-chevron-left"></i>
+                            </span>
+                            <div class="w100p d-flex j-flex-center">
+                                <div class="dropdown w100p">
+                                    <div class="d-flex btn btn-block m0 p0 pl10 pr10  btn-block"
+                                        (click)="showMonthPicker()">
+                                        <div class=" fs14">
+                                            {{ displayMonth }}
+                                        </div>
+                                        <div class="year-selector text-center">{{selectedYear}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="month-change-btns" (click)="increaseMonth()">
+                                <i class="icon-chevron-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="calendar-table m0" *ngIf="calendar">
+                    <thead>
+                        <tr>
+                            <th>Mo</th>
+                            <th>Tu</th>
+                            <th>We</th>
+                            <th>Th</th>
+                            <th>Fr</th>
+                            <th>Sa</th>
+                            <th>Su</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let days of calendar | chunk: 7; let i = index">
+
+                            <ng-container *ngFor="let day of days; let j = index">
+                                <td (click)="selectDay(day)" class="calendar-day"
+                                    [ngClass]="{ 'not-selected-month-date': !day.selectedMonthDate, today: day.isToday }"
+                                    [class.inrange]="day | inCalenderRange: selectedCalenderRange"
+                                    [class.isRangeDate]="selectedCalenderRange?.startDay?.date?.setHours(0, 0, 0, 0) === day?.date?.setHours(0, 0, 0, 0) ||
+                                                selectedCalenderRange?.endDay?.date?.setHours(0, 0, 0, 0) === day?.date?.setHours(0, 0, 0, 0)"
+                                    [class.selected-day]="day?.date?.setHours(0, 0, 0, 0) === selectedDay?.date?.setHours(0, 0, 0, 0)">
+                                    <div class="calendar-day-header" [class.blue-date]="day.isToday">
+                                        <span>{{ day.date | date:'dd' }}</span>
+                                    </div>
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="bg-white  p5 pl10 pr10 d-flex">
+                    <a type="button" class="fs12" (click)="clearCalendar()">Clear</a>
+                    <a type="button" class="fs12" (click)="setCurrentMonth()">Today</a>
+                </div>
+            </ng-container>
+        </div>
+    </form>
+</div>

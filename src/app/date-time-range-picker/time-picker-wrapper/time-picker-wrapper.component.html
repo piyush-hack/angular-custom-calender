@@ -1,0 +1,14 @@
+<div class="dropdown">
+
+    <button class="btn btn-default dropdown-toggle btn-block d-flex" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="true" type="button" (click)="showTimePicker()">
+        <span>{{placeholder || 'Select Time' }}</span>
+        <span>
+            <i class="icon-clock"></i>
+        </span>
+    </button>
+    <div class="time-picker-dropdown dropdown-menu" *ngIf="viewTimePicker">
+        <app-time-picker [timeValue]="timeValueInDefaultFormat" [format]="format"
+            (valueChange)="onValueChange($any($event))"></app-time-picker>
+    </div>
+</div>

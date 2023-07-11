@@ -1,0 +1,12 @@
+<div dropdown class="dropdown">
+    <button class="btn btn-default dropdown-toggle btn-block d-flex " [class.text-grey]="!placeholder" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="true" (click)="onDropdownBtnClick()" type="button">
+        <span>{{ placeholder || format }}</span>
+        <span>
+            <i class="icon-calendar"></i>
+        </span>
+    </button>
+    <div #datePickerInput *ngIf="viewDatePicker"  class="date-picker-dropdown dropdown-menu">
+        <app-date-range-picker [dateValue]="dateValue" [selectCalendarRange]="selectCalendarRange" [format]="format" (valueChange)="onValueChange($event)"></app-date-range-picker>
+    </div>
+</div>

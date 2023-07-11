@@ -5,7 +5,7 @@ import { CalendarRange, DateUtils } from '../../utils';
 @Component({
     selector: 'app-date-time-range-picker',
     templateUrl: './date-time-range-picker.component.html',
-    styleUrls: ['../date-time-range-picker.component.scss'],
+    styleUrls: ['../date-time-range-picker.component.scss' , './date-time-range-picker.component.scss'],
 })
 export class DateTimeRangePickerComponent implements OnInit, OnChanges {
     readonly DEFAULT_TIME_FORMAT_STRING =  "HH:mm:ss"

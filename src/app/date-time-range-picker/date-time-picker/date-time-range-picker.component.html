@@ -1,0 +1,22 @@
+<div dropdown class="dropdown">
+    <button  class="btn dropdown-toggle btn-block d-flex" [class.text-grey]="!datePlaceholder" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="true" type="button" (click)="onDateTimePickerBtnClick()">
+        <span *ngIf="!selectCalendarRange">{{datePlaceholder || dateFormat }} {{ timePlaceholder || timeFormat }}</span>
+        <span *ngIf="selectCalendarRange">{{calenderRangePlaceholder || 'DD/MM/YYYY - DD/MM/YYYY' }}</span>
+        <span>
+            <i class="icon-calendar"></i>
+        </span>
+    </button>
+    <div #dateTimePickerInput class="date-time-range-picker-dropdown dropdown-menu" *ngIf="viewDateTimePicker">
+        <div class="d-flex ">
+            <app-date-range-picker [dateValue]="dateValue" [selectCalendarRange]="selectCalendarRange"
+                [format]="dateFormat" (valueChange)="onDateValueChange($event)"></app-date-range-picker>
+            <app-time-picker [timeValue]="timeValue" [format]="timeFormat"
+                (valueChange)="onTimeValueChange($any($event))"></app-time-picker>
+        </div>   
+        <div class="bg-white  p5 pl10 pr10 d-flex dtrp-options">
+            <a type="button" class="fs12 cancel" (click)="clearAllCalendar()">Clear All</a>
+            <a type="button" class="fs12 save-date" (click)="saveAllValues()">Save</a>
+        </div>
+    </div>
+</div>
